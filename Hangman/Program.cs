@@ -2,7 +2,10 @@
 {
     public class Program
     {
-        static void Main()
+        /// <summary>
+        /// This is the entry point to our application.
+        /// </summary>
+        public static void Main()
         {
             var game = new HangmanGame();
 
