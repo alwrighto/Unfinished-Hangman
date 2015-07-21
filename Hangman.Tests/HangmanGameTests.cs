@@ -21,7 +21,7 @@ namespace Hangman.Tests
             };
 
             const string expected = "_ _ _ _ ";
-            Assert.AreEqual(expected, game.GetClue(game.CurrentGameWord));
+            Assert.AreEqual(expected, game.GetClue(game.CurrentGameWord, game.GuessedLetters));
         }
 
         // TODO: This fails, stop it failing!
@@ -36,9 +36,52 @@ namespace Hangman.Tests
 
             game.GuessedLetters.Add('e');
             const string expected = "_ e _ _ ";
-            Assert.AreEqual(expected, game.GetClue(game.CurrentGameWord));
+            Assert.AreEqual(expected, game.GetClue(game.CurrentGameWord, game.GuessedLetters));
         }
 
+        // TODO: This fails, stop it failing!
+        [TestMethod]
+        public void test_GetClue_includes_guessess_ignoring_case()
+        {
+            var game = new HangmanGame()
+            {
+                CurrentGameWord = "Test",
+                GuessedLetters = new HashSet<char>()
+            };
+
+            game.GuessedLetters.Add('E');
+            const string expected = "_ e_ _ ";
+            Assert.AreEqual(expected, game.GetClue(game.CurrentGameWord, game.GuessedLetters));
+        }
+
+        // TODO: This fails, stop it failing!
+        [TestMethod]
+        public void test_IsGoodGuess_returns_true_when_guess_is_correct()
+        {
+            var game = new HangmanGame()
+            {
+                CurrentGameWord = "Test",
+                GuessedLetters = new HashSet<char>()
+            };
+
+            Assert.IsTrue(game.IsGoodGuess('a', "abc"));
+        }
+
+
+        // TODO: This fails, stop it failing!
+        [TestMethod]
+        public void test_IsGoodGuess_returns_false_when_guess_is_incorrect()
+        {
+            var game = new HangmanGame()
+            {
+                CurrentGameWord = "Test",
+                GuessedLetters = new HashSet<char>()
+            };
+
+            Assert.IsFalse(game.IsGoodGuess('a', "zbc"));
+        }
         // TODO: Write more tests
     }
+
+
 }

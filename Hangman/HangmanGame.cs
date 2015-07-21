@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Hangman
@@ -9,16 +10,16 @@ namespace Hangman
         ///////////////////////////////////////////////////////////
         // Constants
         ///////////////////////////////////////////////////////////
-        
+
         /// <summary>
         /// The maximum number of guesses before game over
         /// </summary>
-        public const int GuessLimit = 5;
+        public const int GuessLimit = 3;
 
         ///////////////////////////////////////////////////////////
         // Public Properties
         ///////////////////////////////////////////////////////////
-        
+
         /// <summary>
         /// The current game word which the player is attempting to guess
         /// </summary>
@@ -29,6 +30,13 @@ namespace Hangman
         /// A set of the currently guessed letters.
         /// </summary>
         public HashSet<char> GuessedLetters { get; set; }
+
+        static string Alphabetise(string output)
+        { 
+        char[] sorter = output.ToArray();
+        Array.Sort(sorter);
+        return new string(sorter);
+        }
 
         ///////////////////////////////////////////////////////////
         // Utility Methods
@@ -50,8 +58,11 @@ namespace Hangman
 
             while (incorrectGuesses < GuessLimit)
             {
-                var clue = GetClue(CurrentGameWord);
+
+                var clue = GetClue(CurrentGameWord, GuessedLetters);
+                Console.WriteLine();
                 Console.WriteLine(clue);
+                Console.WriteLine();
 
                 var guess = GetGuessFromPlayer();
                 
@@ -61,9 +72,33 @@ namespace Hangman
                 {
                     incorrectGuesses++;
                 }
-
                 PrintHangman(GuessLimit - incorrectGuesses);
+                Console.WriteLine();
+                string output = string.Join("", GuessedLetters);
+                string sorter = Alphabetise(output);
+                var sb = new StringBuilder();
+                {
+                    foreach (var letter in sorter)
+                        sb.Append(letter + " ");
+                }
+                string arranged = sb.ToString();
+                Console.WriteLine("The letters you have guessed so far are - " + arranged.ToUpper());
+                Console.WriteLine();
+
+                if (clue == CurrentGameWord)
+                {
+                    Console.WriteLine("YOU WIN!");
+                    break;
+                }
+
             }
+
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("YOU DIED!");
+            Console.WriteLine();
+            Console.ResetColor();
+
         }
 
         /// <summary>
@@ -74,7 +109,7 @@ namespace Hangman
         public string GetGameWord()
         {
             // TODO: This is hardcoded as "Goose", it should come randomly from a textfile dictionary of word (or similar)
-            return "Goose";
+            return "GOOSE";
         }
 
         /// <summary>
@@ -85,14 +120,17 @@ namespace Hangman
         /// <remarks>Broken, needs fixing. Considder the following: If else, Switch, Dictionary&lt;int,List&lt;string&gt;&gt;</remarks>
         public string[] GetHangmanDrawing(int livesLeft)
         {
+            //TODO: investigate this thing? Dictionary<int, string> rttt = new Dictionary<int, string>();
             // TODO: this is always a losing drawing, what if they haven't lost yet?
+
             return new[]
             {
+
                 "  ------  ",
                 "  |    |  ",
                 "  |    o  ",
                 "  |   -|- ",
-                "  |   / \\",  // \ is a special character, so we have to escape it
+                "  |   / \\",
                 "  |_____  "
             };
         }
@@ -104,11 +142,18 @@ namespace Hangman
         /// <param name="livesLeft">The number of lives remaining before game over</param>
         public void PrintHangman(int livesLeft)
         {
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.WriteLine("                                                                                ");
+            Console.ResetColor();
+            Console.WriteLine();
             Console.WriteLine("Current life status");
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
             foreach (var line in GetHangmanDrawing(livesLeft))
             {
                 Console.WriteLine(line);
             }
+            Console.ResetColor();
         }
 
         /// <summary>
@@ -116,15 +161,25 @@ namespace Hangman
         /// </summary>
         /// <param name="rawWord">The raw game word</param>
         /// <returns>The game word with unknowns replaced by _ </returns>
-        public string GetClue(string rawWord)
+        public string GetClue(string rawWord, HashSet<char> guessedLetters)
         {
             var sb = new StringBuilder();
             {
                 foreach (var letter in rawWord)
                 {
-                    // TODO: We always show an underscore, show already guessed letters
-                    // use the hashset?
-                    sb.AppendFormat("_ ");
+
+                    // We are doing this, but it doesnm't work if case was wrong
+                    // TODO: Ignore case!
+                    if (guessedLetters.Contains(letter))
+                    {                       
+                        sb.Append(letter + " ");
+                    }
+                    else
+                    {
+                        sb.AppendFormat("_ ");
+                    }
+
+                    //sb.AppendFormat("{0} ", guessedLetters.Contains(letter) ? letter : '_');                 
                 }
             }
             return sb.ToString();
@@ -136,9 +191,44 @@ namespace Hangman
         /// <returns>The character entered by the user</returns>
         public char GetGuessFromPlayer()
         {
-            // TODO: this should be a validated guess from the player.
-            return ' ';
+            Console.WriteLine();
+            Console.WriteLine("Please enter your guess.");
+            Console.WriteLine();
+
+
+            while (true)
+            {
+                ConsoleKeyInfo userInput = Console.ReadKey(true);
+                string guess = userInput.KeyChar.ToString();
+                Console.WriteLine();
+                bool result = guess.Any(x => !char.IsLetter(x));
+
+                while (true)
+                {
+                    if (result == false)
+                    {
+                        return Convert.ToChar(guess.ToUpper());
+                    }
+                    else 
+                    {
+                        Console.WriteLine("Invalid input. Please enter your guess in the form of a letter (A-Z) only");
+                        break;
+                        
+                    }
+                }
+            }
         }
+
+
+        
+
+
+            
+            
+
+            // TODO: this should be a validated guess from the player.
+
+        
 
         /// <summary>
         /// Validates if a guess is good
@@ -151,9 +241,16 @@ namespace Hangman
         /// </remarks>
         public bool IsGoodGuess(char guess, string gameWord)
         {
+            if (gameWord.Contains(guess))
+            {
+            return true;
+            }
+            else
+            {
+            return false;
+            }
             // We are saying that the guess is always wrong
             // TODO: validate the guess properly
-            return false;
         }
     }
 }
