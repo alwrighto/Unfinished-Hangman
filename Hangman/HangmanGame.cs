@@ -53,13 +53,33 @@ namespace Hangman
 
             var incorrectGuesses = 0;
 
-            // TODO: Do something if player wins
-            // TODO: Do something if player runs out of guesses
-
             while (incorrectGuesses < GuessLimit)
             {
 
                 var clue = GetClue(CurrentGameWord, GuessedLetters);
+
+                var winCheck = clue.Replace(" ", "");
+
+                if (winCheck.Equals(CurrentGameWord))
+                {
+                    Console.WriteLine();                    
+                    Console.Write("The word was: ");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine(CurrentGameWord);
+                    Console.WriteLine();
+                    Console.WriteLine("_____.___.               __      __.__      ._.");
+                    Console.WriteLine("\\__  |   | ____  __ __  /  \\    /  \\__| ____| |");
+                    Console.WriteLine(" /   |   |/  _ \\|  |  \\ \\   \\/\\/   /  |/    \\ |");
+                    Console.WriteLine(" \\____   (  <_> )  |  /  \\        /|  |   |  \\|");
+                    Console.WriteLine(" / ______|\\____/|____/    \\__/\\  / |__|___|  /_");
+                    Console.WriteLine(" \\/                            \\/          \\/\\/");
+                    Console.ResetColor();
+                    return;
+                }
+
+
+
+
                 Console.WriteLine();
                 Console.WriteLine(clue);
                 Console.WriteLine();
@@ -72,6 +92,24 @@ namespace Hangman
                 {
                     incorrectGuesses++;
                 }
+
+                if ( GuessLimit == incorrectGuesses)
+                {
+                    Console.WriteLine();
+                    PrintHangman(GuessLimit - incorrectGuesses);
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("_____.___.              ________  .__           .___._.");
+                    Console.WriteLine("\\__  |   | ____  __ __  \\______ \\ |__| ____   __| _/| |");
+                    Console.WriteLine(" /   |   |/  _ \\|  |  \\  |  | |  \\|  |/ __ \\ / __ | | |");
+                    Console.WriteLine(" \\____   (  <_> )  |  /  |  |_|   \\  \\  ___// /_/ |  \\|");
+                    Console.WriteLine(" / ______|\\____/|____/  /_______  /__|\\___  >____ |  __");
+                    Console.WriteLine(" \\/                             \\/        \\/     \\/  \\/");
+                    Console.WriteLine();
+                    Console.ResetColor();
+                    return;
+                }
+
                 PrintHangman(GuessLimit - incorrectGuesses);
                 Console.WriteLine();
                 string output = string.Join("", GuessedLetters);
@@ -85,19 +123,11 @@ namespace Hangman
                 Console.WriteLine("The letters you have guessed so far are - " + arranged.ToUpper());
                 Console.WriteLine();
 
-                if (clue == CurrentGameWord)
-                {
-                    Console.WriteLine("YOU WIN!");
-                    break;
-                }
 
             }
 
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("YOU DIED!");
-            Console.WriteLine();
-            Console.ResetColor();
+
+            
 
         }
 
@@ -167,9 +197,6 @@ namespace Hangman
             {
                 foreach (var letter in rawWord)
                 {
-
-                    // We are doing this, but it doesnm't work if case was wrong
-                    // TODO: Ignore case!
                     if (guessedLetters.Contains(letter))
                     {                       
                         sb.Append(letter + " ");
@@ -177,9 +204,7 @@ namespace Hangman
                     else
                     {
                         sb.AppendFormat("_ ");
-                    }
-
-                    //sb.AppendFormat("{0} ", guessedLetters.Contains(letter) ? letter : '_');                 
+                    }              
                 }
             }
             return sb.ToString();
@@ -205,31 +230,33 @@ namespace Hangman
 
                 while (true)
                 {
-                    if (result == false)
+                    if (GuessedLetters.Contains(Convert.ToChar(guess.ToUpper())))
                     {
-                        return Convert.ToChar(guess.ToUpper());
-                    }
-                    else 
-                    {
-                        Console.WriteLine("Invalid input. Please enter your guess in the form of a letter (A-Z) only");
+                        Console.WriteLine("You have already guessed that letter. Please make another guess.");
                         break;
-                        
+                    }
+                    else
+                    {
+                        while (true)
+                        {
+                            if (result == false)
+                            {
+                                return Convert.ToChar(guess.ToUpper());
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid input. Please enter your guess in the form of a letter (A-Z) only");
+                                break;
+
+                            }
+                        }
                     }
                 }
+
+
             }
         }
-
-
-        
-
-
-            
-            
-
-            // TODO: this should be a validated guess from the player.
-
-        
-
+       
         /// <summary>
         /// Validates if a guess is good
         /// </summary>
@@ -249,8 +276,6 @@ namespace Hangman
             {
             return false;
             }
-            // We are saying that the guess is always wrong
-            // TODO: validate the guess properly
         }
     }
 }

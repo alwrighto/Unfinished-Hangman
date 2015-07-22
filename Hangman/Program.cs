@@ -34,7 +34,7 @@ namespace Hangman
 
                 else
                 {
-                    while (true) // play forever
+                    while (true)
                     {
                         game.Play();
                         ConsoleKeyInfo playAgain = Console.ReadKey(true);
