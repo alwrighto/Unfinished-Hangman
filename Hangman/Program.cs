@@ -37,10 +37,10 @@ namespace Hangman
                     while (true)
                     {
                         game.Play();
-                        ConsoleKeyInfo playAgain = Console.ReadKey(true);
                         Console.WriteLine();
                         Console.WriteLine("Would you like to play again? Y/N?");
                         Console.WriteLine();
+                        ConsoleKeyInfo playAgain = Console.ReadKey(true);
 
                         while (playAgain.KeyChar.ToString().ToUpper() != "Y" && playAgain.KeyChar.ToString().ToUpper() != "N")
                         {

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Reflection;
 
 namespace Hangman
 {
@@ -98,7 +100,10 @@ namespace Hangman
                     Console.WriteLine();
                     PrintHangman(GuessLimit - incorrectGuesses);
                     Console.WriteLine();
+                    Console.Write("The word was: ");
                     Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(CurrentGameWord);
+                    Console.WriteLine();
                     Console.WriteLine("_____.___.              ________  .__           .___._.");
                     Console.WriteLine("\\__  |   | ____  __ __  \\______ \\ |__| ____   __| _/| |");
                     Console.WriteLine(" /   |   |/  _ \\|  |  \\  |  | |  \\|  |/ __ \\ / __ | | |");
@@ -138,9 +143,14 @@ namespace Hangman
         /// <remarks>Broken, needs fixing</remarks>
         public string GetGameWord()
         {
-            // TODO: This is hardcoded as "Goose", it should come randomly from a textfile dictionary of word (or similar)
-            return "GOOSE";
+            var path = @"C:\Users\Alex\Documents\Visual Studio 2015\Projects\Hangman\Hangman\WordList.txt";
+            string[] allLines = File.ReadAllLines(path);
+            Random rnd1 = new Random();
+            string wordFromFile = (allLines[rnd1.Next(allLines.Length)]);
+            return wordFromFile;                     
         }
+
+
 
         /// <summary>
         /// Gets a drawing of the current state of the game
