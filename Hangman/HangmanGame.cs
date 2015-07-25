@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Reflection;
 
 namespace Hangman
 {
@@ -16,7 +15,7 @@ namespace Hangman
         /// <summary>
         /// The maximum number of guesses before game over
         /// </summary>
-        public const int GuessLimit = 3;
+        public const int GuessLimit = 8;
 
         ///////////////////////////////////////////////////////////
         // Public Properties
@@ -158,21 +157,131 @@ namespace Hangman
         /// <param name="livesLeft">The number of lives remaining before game over</param>
         /// <returns>A string array that represents the state of the game</returns>
         /// <remarks>Broken, needs fixing. Considder the following: If else, Switch, Dictionary&lt;int,List&lt;string&gt;&gt;</remarks>
+        ///TODO: investigate this thing? Dictionary<int, string> rttt = new Dictionary<int, string>();
+        /// TODO: this is always a losing drawing, what if they haven't lost yet?
         public string[] GetHangmanDrawing(int livesLeft)
         {
-            //TODO: investigate this thing? Dictionary<int, string> rttt = new Dictionary<int, string>();
-            // TODO: this is always a losing drawing, what if they haven't lost yet?
 
-            return new[]
+            string[] eightLives = new string[]
             {
-
-                "  ------  ",
-                "  |    |  ",
-                "  |    o  ",
-                "  |   -|- ",
-                "  |   / \\",
-                "  |_____  "
+            "   _____",
+            "  |     ",
+            "  |     ",
+            "  |    ",
+            "  |     ",
+            "  |    ",
+            "  |",
+            "__|__"
             };
+            string[] sevenLives = new string[]
+            {
+            "   _____",
+            "  |     |",
+            "  |     ",
+            "  |    ",
+            "  |     ",
+            "  |    ",
+            "  |",
+            "__|__"
+            };
+            string[] sixLives = new string[]
+            {
+            "   _____",
+            "  |     |",
+            "  |     o",
+            "  |    ",
+            "  |     ",
+            "  |    ",
+            "  |",
+            "__|__"
+            };
+            string[] fiveLives = new string[]
+            {
+            "   _____",
+            "  |     |",
+            "  |     o",
+            "  |     |",
+            "  |     ",
+            "  |    ",
+            "  |",
+            "__|__"
+            };
+            string[] fourLives = new string[]
+            {
+            "   _____",
+            "  |     |",
+            "  |     o",
+            "  |    \\|",
+            "  |     ",
+            "  |    ",
+            "  |",
+            "__|__"
+            };
+            string[] threeLives = new string[]
+            {
+            "   _____",
+            "  |     |",
+            "  |     o",
+            "  |    \\|/",
+            "  |     ",
+            "  |    ",
+            "  |",
+            "__|__"
+            };
+            string[] twoLives = new string[]
+            {
+            "   _____",
+            "  |     |",
+            "  |     o",
+            "  |    \\|/",
+            "  |     |",
+            "  |    ",
+            "  |",
+            "__|__"
+            };
+            string[] oneLives = new string[]
+            {
+            "   _____",
+            "  |     |",
+            "  |     o",
+            "  |    \\|/",
+            "  |     |",
+            "  |    / ",
+            "  |",
+            "__|__"
+            };
+            string[] zeroLives = new string[]
+            {
+            "   _____",
+            "  |     |",
+            "  |     o",
+            "  |    \\|/",
+            "  |     |",
+            "  |    / \\",
+            "  |",
+            "__|__"
+            };
+
+            
+            Dictionary<int, string[]> hangmanDiagrams = new Dictionary<int, string[]>();
+
+            hangmanDiagrams.Add(8, eightLives);
+            hangmanDiagrams.Add(7, sevenLives);
+            hangmanDiagrams.Add(6, sixLives);
+            hangmanDiagrams.Add(5, fiveLives);
+            hangmanDiagrams.Add(4, fourLives);
+            hangmanDiagrams.Add(3, threeLives);
+            hangmanDiagrams.Add(2, twoLives);
+            hangmanDiagrams.Add(1, oneLives);
+            hangmanDiagrams.Add(0, zeroLives);
+            
+            string[] getDiagram;
+            if (hangmanDiagrams.TryGetValue(livesLeft, out getDiagram))
+            {
+                return getDiagram;
+            }
+            else
+                return new[] { "ERROR" };
         }
 
 
@@ -188,7 +297,7 @@ namespace Hangman
             Console.WriteLine();
             Console.WriteLine("Current life status");
             Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.DarkRed;
             foreach (var line in GetHangmanDrawing(livesLeft))
             {
                 Console.WriteLine(line);
@@ -226,6 +335,7 @@ namespace Hangman
         /// <returns>The character entered by the user</returns>
         public char GetGuessFromPlayer()
         {
+            bool validInput = false;
             Console.WriteLine();
             Console.WriteLine("Please enter your guess.");
             Console.WriteLine();
@@ -245,6 +355,11 @@ namespace Hangman
                         Console.WriteLine("You have already guessed that letter. Please make another guess.");
                         break;
                     }
+                    else if (validInput == true)
+                        {
+                        validInput = false;
+                        break;
+                        }
                     else
                     {
                         while (true)
@@ -256,6 +371,7 @@ namespace Hangman
                             else
                             {
                                 Console.WriteLine("Invalid input. Please enter your guess in the form of a letter (A-Z) only");
+                                validInput = true;
                                 break;
 
                             }
