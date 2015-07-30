@@ -393,14 +393,7 @@ namespace Hangman
         /// </remarks>
         public bool IsGoodGuess(char guess, string gameWord)
         {
-            if (gameWord.Contains(guess))
-            {
-            return true;
-            }
-            else
-            {
-            return false;
-            }
+            return gameWord.Contains(guess);
         }
     }
 }
