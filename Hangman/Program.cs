@@ -123,7 +123,7 @@ namespace Hangman
                                         Console.WriteLine("Invalid Input. Please enter using only the characters A-Z.");
                                         break;
                                     }
-                                    if (File.ReadAllLines(@"C:\Users\Alex\Documents\Visual Studio 2015\Projects\Hangman\Hangman\WordList.txt")
+                                    if (File.ReadAllLines(Properties.Settings.Default.DictionaryFile)
                                         .Contains(addWord))
                                     {
                                         Console.WriteLine();
@@ -154,7 +154,7 @@ namespace Hangman
                                     }
                                     else if (wordEntryString == "Y")
                                     {
-                                        File.AppendAllText(@"C:\Users\Alex\Documents\Visual Studio 2015\Projects\Hangman\Hangman\WordList.txt", 
+                                        File.AppendAllText(Properties.Settings.Default.DictionaryFile, 
                                             addWord + Environment.NewLine);
                                         Console.WriteLine();
                                         Console.ForegroundColor = ConsoleColor.Green;

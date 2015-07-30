@@ -142,8 +142,7 @@ namespace Hangman
         /// <remarks>Broken, needs fixing</remarks>
         public string GetGameWord()
         {
-            var path = @"C:\Users\Alex\Documents\Visual Studio 2015\Projects\Hangman\Hangman\WordList.txt";
-            string[] allLines = File.ReadAllLines(path);
+            string[] allLines = File.ReadAllLines(Properties.Settings.Default.DictionaryFile);
             Random rnd1 = new Random();
             string wordFromFile = (allLines[rnd1.Next(allLines.Length)]);
             return wordFromFile;                     
