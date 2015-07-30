@@ -6,16 +6,8 @@ namespace Hangman
 {
     public class Program
     {
-
-        public static void Main()
-
+        public static void DisplayIntroText()
         {
-            String playAgainString = "Z";
-            
-            ConsoleKeyInfo playAgain;
-
-            var game = new HangmanGame();
-
             Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("   /\\  /\\ __ _  _ __    __ _  _ __ ___    __ _  _ __  ");
@@ -24,16 +16,36 @@ namespace Hangman
             Console.WriteLine(" \\/ /_/  \\__,_||_| |_| \\__, ||_| |_| |_| \\__,_||_| |_|");
             Console.WriteLine("                       |___/                          ");
             Console.ResetColor();
+        }
+
+        public static void ShowMenu()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Press N to begin a new game.");
+            Console.WriteLine();
+            Console.WriteLine("Press W to add a new word to the dictionary.");
+            Console.WriteLine();
+            Console.WriteLine("Press X to Quit");
+        }
+
+
+        public static void Main()
+        {
+
+            DisplayIntroText();
+
+            ShowMenu();
+
+            String playAgainString = "Z";
+            
+            ConsoleKeyInfo playAgain;
+
+            var game = new HangmanGame();
 
             while (true)
             {
                 playAgainString = "Z";
-                Console.WriteLine();
-                Console.WriteLine("Press N to begin a new game.");
-                Console.WriteLine();
-                Console.WriteLine("Press W to add a new word to the dictionary.");
-                Console.WriteLine();
-                Console.WriteLine("Press X to Quit");
+
 
 
                 while (true)
